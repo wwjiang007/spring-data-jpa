@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 the original author or authors.
+ * Copyright 2013-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,9 @@ import javax.persistence.Transient;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.jmolecules.ddd.types.AggregateRoot;
+import org.jmolecules.ddd.types.Association;
+import org.jmolecules.ddd.types.Identifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +41,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
 import org.springframework.data.annotation.AccessType.Type;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.util.ClassTypeInformation;
@@ -71,7 +73,9 @@ public class JpaPersistentPropertyImplUnitTests {
 	void considersOneToOneMappedPropertyAnAssociation() {
 
 		JpaPersistentProperty property = entity.getRequiredPersistentProperty("other");
+
 		assertThat(property.isAssociation()).isTrue();
+		assertThat(property.getAssociationTargetType()).isEqualTo(Sample.class);
 	}
 
 	@Test // DATAJPA-376
@@ -143,7 +147,7 @@ public class JpaPersistentPropertyImplUnitTests {
 		Iterable<? extends TypeInformation<?>> entityType = property.getPersistentEntityTypes();
 		assertThat(entityType.iterator().hasNext()).isTrue();
 		assertThat(entityType.iterator().next())
-				.isEqualTo((TypeInformation) ClassTypeInformation.from(Implementation.class));
+				.isEqualTo(ClassTypeInformation.from(Implementation.class));
 	}
 
 	@Test // DATAJPA-716
@@ -168,6 +172,16 @@ public class JpaPersistentPropertyImplUnitTests {
 		JpaPersistentProperty property = entity.getRequiredPersistentProperty("updatable");
 
 		assertThat(property.isAssociation()).isFalse();
+	}
+
+	@Test
+	void detectsJMoleculesAssociation() {
+
+		JpaPersistentEntityImpl<?> entity = context.getRequiredPersistentEntity(JMoleculesSample.class);
+		JpaPersistentProperty property = entity.getRequiredPersistentProperty("association");
+
+		assertThat(property.isAssociation()).isTrue();
+		assertThat(property.getAssociationTargetType()).isEqualTo(JMoleculesAggregate.class);
 	}
 
 	private JpaPersistentProperty getProperty(Class<?> ownerType, String propertyName) {
@@ -293,4 +307,12 @@ public class JpaPersistentPropertyImplUnitTests {
 		@Column(updatable = false) String name;
 		String updatable;
 	}
+
+	// jMolecules
+
+	private static class JMoleculesSample {
+		Association<JMoleculesAggregate, Identifier> association;
+	}
+
+	private interface JMoleculesAggregate extends AggregateRoot<JMoleculesAggregate, Identifier> {}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2020 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class AuditingBeanDefinitionParser implements BeanDefinitionParser {
 	/**
 	 * Copied code of SpringConfiguredBeanDefinitionParser until this class gets public.
 	 *
-	 * @see <a href="https://jira.springframework.org/browse/SPR-7340">SPR-7340</a>
+	 * @see <a href="https://github.com/spring-projects/spring-framework/issues/11999">SPR-7340</a>
 	 * @author Juergen Hoeller
 	 */
 	private static class SpringConfiguredBeanDefinitionParser implements BeanDefinitionParser {

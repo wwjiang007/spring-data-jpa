@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 the original author or authors.
+ * Copyright 2014-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Thomas Darimont
  * @author Oliver Gierke
  * @author Jens Schauder
+ * @author Jesse Wouters
  */
 @Transactional
 @ExtendWith(SpringExtension.class)
@@ -63,6 +64,18 @@ public class AbstractPersistableIntegrationTests {
 		em.clear();
 
 		CustomAbstractPersistable proxy = repository.getOne(entity.getId());
+
+		assertThat(proxy).isEqualTo(proxy);
+	}
+
+	@Test // gh-1697
+	void equalsWorksForProxiedEntitiesUsingGetById() {
+
+		CustomAbstractPersistable entity = repository.saveAndFlush(new CustomAbstractPersistable());
+
+		em.clear();
+
+		CustomAbstractPersistable proxy = repository.getById(entity.getId());
 
 		assertThat(proxy).isEqualTo(proxy);
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2020 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.AbstractJPAQuery;
 
 /**
- * Querydsl specific fragment for extending {@link SimpleJpaRepository} with an implementation for implementation for
+ * Querydsl specific fragment for extending {@link SimpleJpaRepository} with an implementation of
  * {@link QuerydslPredicateExecutor}.
  *
  * @author Oliver Gierke
